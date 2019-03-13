@@ -99,11 +99,11 @@
 
         <section anchor="ctype" title="C-Type Meaning in an Timestamp Object">
             <t>
-                For this object, the C-Type <xref target="RFC4884"/> is used to indicate both the earliest time host is able to measure of the embedded triggering packet arriving and the latest time host is able to measure of the ICMP message departing.
+                When the C-Type <xref target="RFC4884"/> subtype is set to zero, the object payload indicates the earliest time host is able to measure of the embedded triggering packet arriving and the latest time host is able to measure of the ICMP message departing.
                 This is illustrated in Fugure 1.
             </t>
             <t>
-                <figure anchor="encoding" title="C-Type for the Timestamp Object" align="center"><artwork><![CDATA[
+                <figure anchor="encoding" title="C-Type 0 for the Timestamp Object" align="center"><artwork><![CDATA[
 0                   1                   2                   3
 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
