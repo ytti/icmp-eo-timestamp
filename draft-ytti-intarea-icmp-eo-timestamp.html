@@ -500,7 +500,7 @@
 <h1 id="rfc.section.4">
 <a href="#rfc.section.4">4.</a> <a href="#ctype" id="ctype">C-Type Meaning in an Timestamp Object</a>
 </h1>
-<p id="rfc.section.4.p.1">For this object, the C-Type <a href="#RFC4884" class="xref">[RFC4884]</a> is used to indicate both the earliest time host is able to measure of the embedded triggering packet arriving and the latest time host is able to measure of the ICMP message departing.  This is illustrated in Fugure 1.  </p>
+<p id="rfc.section.4.p.1">When the C-Type <a href="#RFC4884" class="xref">[RFC4884]</a> subtype is set to zero, the object payload indicates the earliest time host is able to measure of the embedded triggering packet arriving and the latest time host is able to measure of the ICMP message departing.  This is illustrated in Fugure 1.  </p>
 <div id="rfc.figure.1"></div>
 <div id="encoding"></div>
 <pre>
@@ -514,7 +514,7 @@
 |  Departing Timestamp                                          |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
-<p class="figure">Figure 1: C-Type for the Timestamp Object</p>
+<p class="figure">Figure 1: C-Type 0 for the Timestamp Object</p>
 <p></p>
 <p></p>
 

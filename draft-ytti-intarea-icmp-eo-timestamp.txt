@@ -150,11 +150,11 @@ Internet-Draft                  timestamp                     March 2019
 
 4.  C-Type Meaning in an Timestamp Object
 
-   For this object, the C-Type [RFC4884] is used to indicate both the
-   earliest time host is able to measure of the embedded triggering
-   packet arriving and the latest time host is able to measure of the
-   ICMP message departing.  This is illustrated in Fugure 1.
-
+   When the C-Type [RFC4884] subtype is set to zero, the object payload
+   indicates the earliest time host is able to measure of the embedded
+   triggering packet arriving and the latest time host is able to
+   measure of the ICMP message departing.  This is illustrated in Fugure
+   1.
 
 
 
@@ -180,7 +180,7 @@ Internet-Draft                  timestamp                     March 2019
    |  Departing Timestamp                                          |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-                 Figure 1: C-Type for the Timestamp Object
+                Figure 1: C-Type 0 for the Timestamp Object
 
    48 bit Arriving Timestamp:  Earliest possible timestamp of the
       embedded triggering packet arriving at the host.
