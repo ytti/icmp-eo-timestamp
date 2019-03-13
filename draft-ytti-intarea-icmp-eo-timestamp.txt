@@ -1,0 +1,280 @@
+
+
+
+
+intarea                                                          S. Ytti
+Internet-Draft                                                       NTT
+Intended status: Standards Track                          March 13, 2019
+Expires: September 14, 2019
+
+
+                  ICMP Extension Object for Timestamps
+                draft-ytti-intarea-icmp-eo-timestamp-00
+
+Abstract
+
+   This memo defines a data structure that can be appended to selected
+   ICMP messages.  The ICMP extension defiend herein can be used
+   determine unidirectional latencies using tools such as TRACEROUTE.
+
+Requirements Language
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
+   14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on September 14, 2019.
+
+Copyright Notice
+
+   Copyright (c) 2019 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (https://trustee.ietf.org/license-info) in effect on the date of
+
+
+
+Ytti                   Expires September 14, 2019               [Page 1]
+
+Internet-Draft                  timestamp                     March 2019
+
+
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Applications  . . . . . . . . . . . . . . . . . . . . . . . .   3
+   3.  Timestamp Object  . . . . . . . . . . . . . . . . . . . . . .   3
+   4.  C-Type Meaning in an Timestamp Object . . . . . . . . . . . .   3
+   5.  Timestamp . . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   4
+     6.1.  Normative References  . . . . . . . . . . . . . . . . . .   4
+     6.2.  Informative References  . . . . . . . . . . . . . . . . .   5
+   Appendix A.  Acknowledgments  . . . . . . . . . . . . . . . . . .   5
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   5
+
+1.  Introduction
+
+   IP devices use the Internet Control Message Protocol (ICMPv4
+   [RFC0792] and ICMPv6 [RFC4443]) to convey control information.  In
+   particular, when an IP device receives a datagram that it cannot
+   process, it may send an ICMP message to the datagram's originator.
+   Network operators and high-level protocols use these ICMP messages to
+   detect and diagnose network issues.
+
+   One typical application for ICMP messages is for a network operator
+   to intentionally send packet which IP device is unable to process, so
+   that the network operator may learn diagnostic information about the
+   IP device.  Information network operator can recover with this method
+   includes for example IP devices in path between source and
+   destination as well as RTT or round-trip time between originator and
+   the IP device in the path.
+
+   RTT information can be used to reduce the time it takes to diagnose
+   and solve a network problem.  RTT does not however communicate if the
+   issue seen is from source to destination or from destination to
+   source, this means that network operator needs to communicate to
+   networks operating both direction in effort to diagnose the network
+   problem.
+
+   Using the extension defined herein, a device can explicitly
+   communicate its timestamp in the ICMP message allowing the receiver
+   of the message to calculate unidirectional delay times.  Using this
+   information operator can reduce the time it takes to diagnose and
+
+
+
+Ytti                   Expires September 14, 2019               [Page 2]
+
+Internet-Draft                  timestamp                     March 2019
+
+
+   solve the network problem by being able to determine if the observed
+   issue occurs in forward or reverse path.
+
+2.  Applications
+
+   ICMP extension defined in this memo provides additional capability to
+   traceroute.  An enhanced traceroute application, like older
+   implementations, identifies nodes that a datagram visited en route to
+   its destination.  It differs from older implementation in that it can
+   determine unidirectional latencies of nodes in the path.
+
+3.  Timestamp Object
+
+   This section defines the Timestamp Object, an ICMP extension object
+   with a Class-Num (Object Class Value) of FIXME4 that can be appended
+   to the following messages:
+
+      ICMPv4 Time Exceeded
+      ICMPv4 Destination Unreachable
+      ICMPv4 Parameter Problem
+      ICMPv6 Time Exceeded
+      ICMPv6 Destination Unreachable
+
+   For reasons described in [RFC4884], this extension cannot be appended
+   to any of the currently defined ICMPv4 or ICMPv6 messages other than
+   the listed above.
+
+   The extension defiend herein MAY be appended to any of the above
+   listed messages and SHOULD be appended whenever local policy or
+   security considerations do not supersede this requirement.
+
+   A single ICMP message can contain zero or one instances of the
+   Timestamp Object.
+
+4.  C-Type Meaning in an Timestamp Object
+
+   For this object, the C-Type [RFC4884] is used to indicate both the
+   earliest time host is able to measure of the embedded triggering
+   packet arriving and the latest time host is able to measure of the
+   ICMP message departing.  This is illustrated in Fugure 1.
+
+
+
+
+
+
+
+
+
+
+
+Ytti                   Expires September 14, 2019               [Page 3]
+
+Internet-Draft                  timestamp                     March 2019
+
+
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Arriving Timstamp                                            |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Arriving Timestmap           | Departing Timestamp           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Departing Timestamp                                          |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+                 Figure 1: C-Type for the Timestamp Object
+
+   48 bit Arriving Timestamp:  Earliest possible timestamp of the
+      embedded triggering packet arriving at the host.
+   48 bit Departing Timestamp:  Latest possible timestamp of the ICMP
+      message departing from the host.
+
+5.  Timestamp
+
+   The timestamp MUST be 6 bytes or 48 bits wide, most significant bit
+   is a flag called NCE or 'non-canonical epoch'.  If the NCE flag is
+   not set the timestamp's epoch is UTC midnight.  If the NCE flag is
+   set the timestamp's epoch is unspecified but not UTC midnight.
+   Timestamp unit is nanoseconds.
+
+6.  References
+
+6.1.  Normative References
+
+   [RFC0792]  Postel, J., "Internet Control Message Protocol", STD 5,
+              RFC 792, DOI 10.17487/RFC0792, September 1981,
+              <https://www.rfc-editor.org/info/rfc792>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC4443]  Conta, A., Deering, S., and M. Gupta, Ed., "Internet
+              Control Message Protocol (ICMPv6) for the Internet
+              Protocol Version 6 (IPv6) Specification", STD 89,
+              RFC 4443, DOI 10.17487/RFC4443, March 2006,
+              <https://www.rfc-editor.org/info/rfc4443>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+
+
+
+Ytti                   Expires September 14, 2019               [Page 4]
+
+Internet-Draft                  timestamp                     March 2019
+
+
+6.2.  Informative References
+
+   [RFC4884]  Bonica, R., Gan, D., Tappan, D., and C. Pignataro,
+              "Extended ICMP to Support Multi-Part Messages", RFC 4884,
+              DOI 10.17487/RFC4884, April 2007,
+              <https://www.rfc-editor.org/info/rfc4884>.
+
+Appendix A.  Acknowledgments
+
+Author's Address
+
+   Saku Ytti
+   NTT Communications
+
+   Email: ytti@ntt.net
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ytti                   Expires September 14, 2019               [Page 5]
