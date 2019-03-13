@@ -32,6 +32,6 @@ You agree to comply with all applicable IETF policies and procedures,
 including, BCP 78, 79, the TLP, and the TLP rules regarding code components
 (e.g. being subject to a Simplified BSD License) in Contributions.
 
-[xml]: https://ytti.github.io/flow-label/draft-ytti-intarea-icmp-eo-timestamp.xml
-[txt]: https://ytti.github.io/flow-label/draft-ytti-intarea-icmp-eo-timestamp.txt
-[html]: https://ytti.github.io/flow-label/draft-ytti-intarea-icmp-eo-tiemstamp.html
+[xml]: https://ytti.github.io/icmp-eo-timestamp/draft-ytti-intarea-icmp-eo-timestamp.xml
+[txt]: https://ytti.github.io/icmp-eo-timestamp/draft-ytti-intarea-icmp-eo-timestamp.txt
+[html]: https://ytti.github.io/icmp-eo-timestamp/draft-ytti-intarea-icmp-eo-tiemstamp.html
