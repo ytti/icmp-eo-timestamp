@@ -34,4 +34,4 @@ including, BCP 78, 79, the TLP, and the TLP rules regarding code components
 
 [xml]: https://ytti.github.io/icmp-eo-timestamp/draft-ytti-intarea-icmp-eo-timestamp.xml
 [txt]: https://ytti.github.io/icmp-eo-timestamp/draft-ytti-intarea-icmp-eo-timestamp.txt
-[html]: https://ytti.github.io/icmp-eo-timestamp/draft-ytti-intarea-icmp-eo-tiemstamp.html
+[html]: https://ytti.github.io/icmp-eo-timestamp/draft-ytti-intarea-icmp-eo-timestamp.html
