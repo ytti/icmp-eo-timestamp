@@ -1,0 +1,15 @@
+language: python
+python:
+- '3.6'
+install:
+- pip install xml2rfc
+script:
+- xml2rfc --html draft-ytti-intarea-icmp-eo-timestamp.xml
+- xml2rfc --text draft-ytti-intarea-icmp-eo-timestamp.xml
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: "$ICMP_EO_TIMESTAMP_GH_PAGES_TOKEN"
+  keep-history: true
+  on:
+    branch: master

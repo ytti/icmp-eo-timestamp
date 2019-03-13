@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<?rfc comments="yes"?>
+<?rfc compact="yes"?>
+<?rfc inline="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc subcompact="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="3"?>
+<?rfc tocindent="yes"?>
+<?rfc tocompact="yes"?>
+<?rfc strict="yes"?>
+
+
+<rfc category="std" docName="draft-ytti-intarea-icmp-eo-timestamp-00">
+    <front>
+        <title abbrev="timestamp">
+           ICMP Extension Object for Timestamps
+        </title>
+
+        <author fullname="Saku Ytti" initials="S." surname="Ytti">
+            <organization abbrev="NTT">NTT Communications</organization>
+            <address>
+                <email>ytti@ntt.net</email>
+            </address>
+        </author>
+
+        <date />
+
+        <area>Internnet</area>
+        <workgroup>intarea</workgroup>
+        <keyword>Extension Object Timestamp</keyword>
+
+        <abstract>
+            <t>
+                This memo defines a data structure that can be appended to selected ICMP messages.
+                The ICMP extension defiend herein can be used determine unidirectional latencies using tools such as TRACEROUTE.
+            </t>
+        </abstract>
+
+        <note title="Requirements Language">
+            <t>
+                The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they appear in all capitals, as shown here.
+            </t>
+        </note>
+
+    </front>
+    <middle>
+        <section anchor="introduction" title="Introduction">
+            <t>
+                IP devices use the Internet Control Message Protocol (ICMPv4 <xref target="RFC0792"/> and ICMPv6 <xref target="RFC4443"/>) to convey control information.
+                In particular, when an IP device receives a datagram that it cannot process, it may send an ICMP message to the datagram's originator.
+                Network operators and high-level protocols use these ICMP messages to detect and diagnose network issues.
+            </t>
+            <t>
+                One typical application for ICMP messages is for a network operator to intentionally send packet which IP device is unable to process, so that the network operator may learn diagnostic information about the IP device.
+                Information network operator can recover with this method includes for example IP devices in path between source and destination as well as RTT or round-trip time between originator and the IP device in the path.
+            </t>
+            <t>
+                RTT information can be used to reduce the time it takes to diagnose and solve a network problem.
+                RTT does not however communicate if the issue seen is from source to destination or from destination to source, this means that network operator needs to communicate to networks operating both direction in effort to diagnose the network problem.
+            </t>
+            <t>
+              Using the extension defined herein, a device can explicitly communicate its timestamp in the ICMP message allowing the receiver of the message to calculate unidirectional delay times.
+              Using this information operator can reduce the time it takes to diagnose and solve the network problem by being able to determine if the observed issue occurs in forward or reverse path.
+            </t>
+        </section>
+
+        <section anchor="applications" title="Applications">
+            <t>
+              ICMP extension defined in this memo provides additional capability to traceroute.
+              An enhanced traceroute application, like older implementations, identifies nodes that a datagram visited en route to its destination.
+              It differs from older implementation in that it can determine unidirectional latencies of nodes in the path.
+            </t>
+        </section>
+
+        <section anchor="timestampobject" title="Timestamp Object">
+            <t>
+                This section defines the Timestamp Object, an ICMP extension object with a Class-Num (Object Class Value) of FIXME4 that can be appended to the following messages:
+            </t>
+            <t>
+                <list style="symbol">
+                    <t>ICMPv4 Time Exceeded </t>
+                    <t>ICMPv4 Destination Unreachable</t>
+                    <t>ICMPv4 Parameter Problem</t>
+                    <t>ICMPv6 Time Exceeded</t>
+                    <t>ICMPv6 Destination Unreachable</t>
+                </list>                                                                                                                             </t>
+            <t>
+                For reasons described in <xref target="RFC4884"/>, this extension cannot be appended to any of the currently defined ICMPv4 or ICMPv6 messages other than the listed above.                                                                                                 </t>
+            <t>
+                The extension defiend herein MAY be appended to any of the above listed messages and SHOULD be appended whenever local policy or security considerations do not supersede this requirement.
+            </t>
+            <t>
+                A single ICMP message can contain zero or one instances of the Timestamp Object.
+            </t>
+        </section>
+
+        <section anchor="ctype" title="C-Type Meaning in an Timestamp Object">
+            <t>
+                For this object, the C-Type <xref target="RFC4884"/> is used to indicate both the earliest time host is able to measure of the embedded triggering packet arriving and the latest time host is able to measure of the ICMP message departing.
+                This is illustrated in Fugure 1.
+            </t>
+            <t>
+                <figure anchor="encoding" title="C-Type for the Timestamp Object" align="center"><artwork><![CDATA[
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Arriving Timstamp                                            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Arriving Timestmap           | Departing Timestamp           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Departing Timestamp                                          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]></artwork></figure>
+            </t>
+            <t>
+                <list style="hanging">
+                    <t hangText="48 bit Arriving Timestamp:">
+                        Earliest possible timestamp of the embedded triggering packet arriving at the host.
+                    </t>
+                    <t hangText="48 bit Departing Timestamp:">
+                        Latest possible timestamp of the ICMP message departing from the host.
+                    </t>
+                </list>
+            </t>
+        </section>
+
+        <section anchor="timestamp" title="Timestamp">
+            <t>
+                The timestamp MUST be 6 bytes or 48 bits wide, most significant bit is a flag called NCE or 'non-canonical epoch'.
+                If the NCE flag is not set the timestamp's epoch is UTC midnight.
+                If the NCE flag is set the timestamp's epoch is unspecified but not UTC midnight.
+                Timestamp unit is nanoseconds.
+            </t>
+       </section>
+
+
+    </middle>
+    <back>
+        <references title="Normative References">
+            <?rfc include="reference.RFC.2119"?>
+            <?rfc include="reference.RFC.8174"?>
+            <?rfc include="reference.RFC.0792"?>
+            <?rfc include="reference.RFC.4443"?>
+        </references>
+        <references title="Informative References">
+            <?rfc include="reference.RFC.4884"?>
+        </references>
+
+        <section anchor="acknowledgments" title="Acknowledgments">
+            <t>
+            </t>
+        </section>
+    </back>
+
+</rfc>
